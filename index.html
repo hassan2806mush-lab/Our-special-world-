@@ -84,7 +84,8 @@
         <div id="draw" class="section">
             <div class="box">
                 <span class="title-text">The paintings of my beauty</span>
-                <div id="frameDisplay" style="display:none;"><div class="hanging-frame"><div class="del-art" onclick="deleteArt()">×</div><img id="lastDrawing" src=""></div></div>
+                <div id="paintingsGalleryList"></div>
+                
                 <canvas id="paintCanvas"></canvas>
                 <div style="text-align:center; margin-top:15px;">
                     <button class="enter-btn" style="padding:8px 20px;" onclick="saveDrawing()">ارسال اللوحة ❤️</button>
@@ -153,16 +154,27 @@
         canvas.ontouchmove = (e) => { e.preventDefault(); if(!painting) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
 
         window.clearCanvas = () => ctx.clearRect(0, 0, 300, 300);
+
+        // تعديل وظيفة الحفظ لحفظ عدة رسومات
         window.saveDrawing = async () => {
             const dataUrl = canvas.toDataURL();
-            await setDoc(doc(db, "status", "latest_art"), { img: dataUrl, timestamp: serverTimestamp() });
+            await addDoc(collection(db, "drawings"), { img: dataUrl, createdAt: serverTimestamp() });
             alert("تم تعليق اللوحة! ❤️");
+            window.clearCanvas();
         };
-        window.deleteArt = async () => { if(confirm("حذف اللوحة؟")) await deleteDoc(doc(db, "status", "latest_art")); };
 
-        onSnapshot(doc(db, "status", "latest_art"), (d) => {
-            if(d.exists()) { document.getElementById('frameDisplay').style.display = 'block'; document.getElementById('lastDrawing').src = d.data().img; }
-            else { document.getElementById('frameDisplay').style.display = 'none'; }
+        // تعديل وظيفة الحذف لحذف رسمة معينة
+        window.removeItem = async (col, id) => { if(confirm("حذف؟")) await deleteDoc(doc(db, col, id)); };
+
+        // الاستماع المباشر للرسومات وعرضها كقائمة إطارات معلقة
+        onSnapshot(query(collection(db, "drawings"), orderBy("createdAt", "desc")), (snap) => {
+            const gallery = document.getElementById('paintingsGalleryList');
+            gallery.innerHTML = snap.docs.map(doc => `
+                <div class="hanging-frame">
+                    <div class="del-art" onclick="removeItem('drawings', '${doc.id}')">×</div>
+                    <img src="${doc.data().img}">
+                </div>
+            `).join('');
         });
 
         window.addData = async function(type) {
@@ -184,8 +196,6 @@
                 r.readAsDataURL(f);
             }
         };
-
-        window.removeItem = async (col, id) => { if(confirm("حذف؟")) await deleteDoc(doc(db, col, id)); };
 
         const listen = (col, elId, temp) => {
             onSnapshot(query(collection(db, col), orderBy("createdAt", "desc")), (snap) => {
