@@ -17,7 +17,7 @@
         #login { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; width: 100%; }
         .password-content { background: var(--box-bg); padding: 35px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); text-align: center; max-width: 400px; width: 85%; }
         input[type="password"] { width: 80%; padding: 12px; margin-bottom: 20px; border: 1px solid #eee; border-radius: 12px; text-align: center; outline: none; font-size: 1.2rem; color: var(--main-pink); background: var(--box-bg); }
-        .enter-btn { background-color: var(--main-pink); color: white; border: none; padding: 12px 45px; border-radius: 12px; cursor: pointer; font-weight: bold; }
+        .enter-btn { background-color: var(--main-pink); color: white; border: none; padding: 12px 45px; border-radius: 12px; cursor: pointer; font-weight: bold; display: inline-block; text-decoration: none; }
 
         #main-content { display: none; width: 100%; max-width: 500px; padding: 20px; animation: fadeIn 1s; }
         .nav-tabs { display: flex; justify-content: space-around; background: var(--box-bg); padding: 10px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); overflow-x: auto; }
@@ -28,18 +28,25 @@
         .section.active { display: block; animation: fadeIn 0.5s; }
         .box { background: var(--box-bg); border-radius: 25px; padding: 25px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
         .title-text { font-family: 'Great Vibes', cursive; color: var(--main-pink); font-size: 2.2rem; margin-bottom: 15px; display: block; text-align: center; }
+        .message-text { font-family: 'Dancing Script', cursive; font-size: 1.35rem; line-height: 1.8; text-align: center; color: var(--text-color); }
 
-        /* استايل اللوحة المعلقة مع زر الحذف */
         .hanging-frame { position: relative; margin: 30px auto; width: 220px; height: 220px; background: #fff; border: 8px solid #5d4037; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transform: rotate(-2deg); transition: 0.5s; }
         .hanging-frame::before { content: ''; position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 10px; height: 10px; background: #333; border-radius: 50%; z-index: 2; }
-        .hanging-frame::after { content: ''; position: absolute; top: -22px; left: 50%; transform: translateX(-50%); width: 60px; height: 2px; background: #8d6e63; transform: rotate(-35deg) translateX(-30px); z-index: 1; }
         .hanging-frame img { width: 100%; height: 100%; object-fit: contain; }
-        
-        .del-art { position: absolute; top: -10px; right: -10px; background: #ff4d4d; color: white; border: 2px solid white; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; z-index: 10; }
+        .del-art { position: absolute; top: -10px; right: -10px; background: #ff4d4d; color: white; border: 2px solid white; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: bold; z-index: 10; }
 
         canvas { border: 2px dashed var(--main-pink); border-radius: 15px; background: white; width: 100%; max-width: 300px; height: 300px; touch-action: none; display: block; margin: 0 auto; }
         .list-item { display: flex; justify-content: space-between; align-items: center; background: var(--soft-pink); padding: 12px; border-radius: 15px; margin-bottom: 10px; border-left: 4px solid var(--main-pink); }
-        
+        .del-btn { color: #ff4d4d; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-left: 10px; }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .img-container { position: relative; height: 110px; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 15px; }
+        .img-del { position: absolute; top: -5px; right: -5px; background: var(--main-pink); color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; border: 2px solid white; }
+
+        .input-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee; }
+        .input-group input, .input-group textarea { padding: 10px; border-radius: 10px; border: 1px solid #f0f0f0; outline: none; background: var(--pink-bg); color: var(--text-color); }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
@@ -61,25 +68,23 @@
     <div id="main-content">
         <div class="nav-tabs">
             <div class="tab-btn active" onclick="showTab('letter')">Letter</div>
-            <div class="tab-btn" onclick="showTab('draw')">The Paintings of My Beauty</div>
+            <div class="tab-btn" onclick="showTab('draw')">The paintings of my beauty</div>
             <div class="tab-btn" onclick="showTab('music')">Music</div>
             <div class="tab-btn" onclick="showTab('notes')">Memories</div>
             <div class="tab-btn" onclick="showTab('gallery')">Gallery</div>
         </div>
 
         <div id="letter" class="section active">
-            <div class="box"><span class="title-text">My Dearest Naboushti..</span><p style="text-align:center; font-family:'Dancing Script'; font-size:1.3rem;">This website was created just for you...</p></div>
+            <div class="box">
+                <span class="title-text">My Dearest Naboushti..</span>
+                <p class="message-text">This website was created just for you, to hold our stations and our memories together. Everything here has a special story and a memory etched in our hearts—moments that brought us together throughout those years.</p>
+            </div>
         </div>
 
         <div id="draw" class="section">
             <div class="box">
-                <span class="title-text">The Paintings of My Beauty</span>
-                <div id="frameDisplay" style="display:none;">
-                    <div class="hanging-frame">
-                        <div class="del-art" onclick="deleteArt()">×</div>
-                        <img id="lastDrawing" src="">
-                    </div>
-                </div>
+                <span class="title-text">The paintings of my beauty</span>
+                <div id="frameDisplay" style="display:none;"><div class="hanging-frame"><div class="del-art" onclick="deleteArt()">×</div><img id="lastDrawing" src=""></div></div>
                 <canvas id="paintCanvas"></canvas>
                 <div style="text-align:center; margin-top:15px;">
                     <button class="enter-btn" style="padding:8px 20px;" onclick="saveDrawing()">ارسال اللوحة ❤️</button>
@@ -88,9 +93,17 @@
             </div>
         </div>
 
-        <div id="music" class="section"><div class="box"><span class="title-text">Our Music</span><div id="songsList"></div></div></div>
-        <div id="notes" class="section"><div class="box"><span class="title-text">Our Story</span><div id="notesList"></div></div></div>
-        <div id="gallery" class="section"><div class="box"><span class="title-text">Gallery</span><div id="galleryGrid" class="gallery-grid"></div></div></div>
+        <div id="music" class="section">
+            <div class="box"><span class="title-text">Our Music</span><div id="songsList"></div><div class="input-group"><input type="text" id="sName" placeholder="Song Name"><input type="text" id="sUrl" placeholder="YouTube Link"><button class="enter-btn" style="padding: 8px;" onclick="addData('songs')">Add Song ❤️</button></div></div>
+        </div>
+
+        <div id="notes" class="section">
+            <div class="box"><span class="title-text">Our Story</span><div id="notesList"></div><div class="input-group"><textarea id="noteText" placeholder="Write a memory here.."></textarea><button class="enter-btn" style="padding: 8px;" onclick="addData('notes')">Save Memory ✨</button></div></div>
+        </div>
+
+        <div id="gallery" class="section">
+            <div class="box"><span class="title-text">Gallery</span><div style="text-align: center;"><label for="imgInp" class="enter-btn" style="padding: 10px 20px; cursor:pointer;">Upload Photos</label><input type="file" id="imgInp" multiple style="display:none" onchange="uploadImages(event)"></div><div class="gallery-grid" id="galleryGrid" style="margin-top:20px;"></div></div>
+        </div>
     </div>
 
     <script type="module">
@@ -133,10 +146,10 @@
             const cy = e.touches ? e.touches[0].clientY : e.clientY;
             return { x: cx - rect.left, y: cy - rect.top };
         };
-        canvas.onmousedown = (e) => { painting = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); };
+        canvas.onmousedown = (e) => { painting = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); };
         canvas.onmousemove = (e) => { if(!painting) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
         canvas.onmouseup = () => painting = false;
-        canvas.ontouchstart = (e) => { e.preventDefault(); painting = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); };
+        canvas.ontouchstart = (e) => { e.preventDefault(); painting = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); };
         canvas.ontouchmove = (e) => { e.preventDefault(); if(!painting) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
 
         window.clearCanvas = () => ctx.clearRect(0, 0, 300, 300);
@@ -145,29 +158,44 @@
             await setDoc(doc(db, "status", "latest_art"), { img: dataUrl, timestamp: serverTimestamp() });
             alert("تم تعليق اللوحة! ❤️");
         };
+        window.deleteArt = async () => { if(confirm("حذف اللوحة؟")) await deleteDoc(doc(db, "status", "latest_art")); };
 
-        window.deleteArt = async () => {
-            if(confirm("حذف اللوحة نهائياً؟")) {
-                await deleteDoc(doc(db, "status", "latest_art"));
-                document.getElementById('frameDisplay').style.display = 'none';
+        onSnapshot(doc(db, "status", "latest_art"), (d) => {
+            if(d.exists()) { document.getElementById('frameDisplay').style.display = 'block'; document.getElementById('lastDrawing').src = d.data().img; }
+            else { document.getElementById('frameDisplay').style.display = 'none'; }
+        });
+
+        window.addData = async function(type) {
+            if(type === 'songs') {
+                const n = document.getElementById('sName').value, u = document.getElementById('sUrl').value;
+                if(n && u) await addDoc(collection(db, "songs"), { n, u, createdAt: serverTimestamp() });
+                document.getElementById('sName').value = ''; document.getElementById('sUrl').value = '';
+            } else if(type === 'notes') {
+                const t = document.getElementById('noteText').value;
+                if(t) await addDoc(collection(db, "notes"), { text: t, createdAt: serverTimestamp() });
+                document.getElementById('noteText').value = '';
             }
         };
 
-        onSnapshot(doc(db, "status", "latest_art"), (d) => {
-            if(d.exists()) {
-                document.getElementById('frameDisplay').style.display = 'block';
-                document.getElementById('lastDrawing').src = d.data().img;
-            } else {
-                document.getElementById('frameDisplay').style.display = 'none';
+        window.uploadImages = (e) => {
+            for(let f of e.target.files) {
+                const r = new FileReader();
+                r.onload = async (ev) => { await addDoc(collection(db, "imgs"), { src: ev.target.result, createdAt: serverTimestamp() }); };
+                r.readAsDataURL(f);
             }
-        });
+        };
 
-        onSnapshot(query(collection(db, "songs"), orderBy("createdAt", "desc")), (s) => {
-            document.getElementById('songsList').innerHTML = s.docs.map(d => `<div class="list-item"><a href="${d.data().u}" target="_blank">🎵 ${d.data().n}</a></div>`).join('');
-        });
-        onSnapshot(query(collection(db, "notes"), orderBy("createdAt", "desc")), (s) => {
-            document.getElementById('notesList').innerHTML = s.docs.map(d => `<div class="list-item">${d.data().text}</div>`).join('');
-        });
+        window.removeItem = async (col, id) => { if(confirm("حذف؟")) await deleteDoc(doc(db, col, id)); };
+
+        const listen = (col, elId, temp) => {
+            onSnapshot(query(collection(db, col), orderBy("createdAt", "desc")), (snap) => {
+                document.getElementById(elId).innerHTML = snap.docs.map(doc => temp(doc.id, doc.data())).join('');
+            });
+        };
+
+        listen('songs', 'songsList', (id, d) => `<div class="list-item"><a href="${d.u}" target="_blank" style="text-decoration:none; color:var(--main-pink)">🎵 ${d.n}</a><span class="del-btn" onclick="removeItem('songs', '${id}')">×</span></div>`);
+        listen('notes', 'notesList', (id, d) => `<div class="list-item"><span>${d.text}</span><span class="del-btn" onclick="removeItem('notes', '${id}')">×</span></div>`);
+        listen('imgs', 'galleryGrid', (id, d) => `<div class="img-container"><img src="${d.src}"><div class="img-del" onclick="removeItem('imgs', '${id}')">×</div></div>`);
 
         window.showTab = (id) => {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -177,10 +205,7 @@
         };
 
         window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('intro-screen').style.display = 'none';
-                document.getElementById('login').style.display = 'flex';
-            }, 2500);
+            setTimeout(() => { document.getElementById('intro-screen').style.display = 'none'; document.getElementById('login').style.display = 'flex'; }, 2500);
         };
     </script>
 </body>
