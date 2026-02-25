@@ -48,6 +48,235 @@
         .input-group input, .input-group textarea { padding: 10px; border-radius: 10px; border: 1px solid #f0f0f0; outline: none; background: var(--pink-bg); color: var(--text-color); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* إضافات جديدة للقلوب والنجوم */
+        .heart-fall { position: fixed; top: -20px; user-select: none; pointer-events: none; z-index: 9999; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(100vh); } }
+        body.night-mode { background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%) !important; overflow-x: hidden; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle var(--duration) infinite; z-index: -1; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <button id="dark-toggle" onclick="toggleDark()">🌙</button>
+
+    <div id="intro-screen"><h1 class="title-text" style="font-size: 2.5rem;">Welcome my love..</h1></div>
+
+    <div id="login">
+        <div class="password-content">
+            <h3 style="font-family: 'Great Vibes', cursive; color: var(--main-pink);">Enter our special date</h3>
+            <input type="password" id="passCode" placeholder="••••••••">
+            <br>
+            <button class="enter-btn" onclick="checkPass()">Enter</button>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="nav-tabs">
+            <div class="tab-btn active" onclick="showTab('letter')">Letter</div>
+            <div class="tab-btn" onclick="showTab('draw')">The paintings of my beauty</div>
+            <div class="tab-btn" onclick="showTab('music')">Music</div>
+            <div class="tab-btn" onclick="showTab('notes')">Memories</div>
+            <div class="tab-btn" onclick="showTab('gallery')">Gallery</div>
+        </div>
+
+        <div id="letter" class="section active">
+            <div class="box">
+                <span class="title-text">My Dearest Naboushti..</span>
+                <p class="message-text">This website was created just for you, to hold our stations and our memories together. Everything here has a special story and a memory etched in our hearts—moments that brought us together throughout those years.</p>
+            </div>
+        </div>
+
+        <div id="draw" class="section">
+            <div class="box">
+                <span class="title-text">The paintings of my beauty</span>
+                <div id="paintingsGalleryList"></div>
+                
+                <canvas id="paintCanvas"></canvas>
+                <div style="text-align:center; margin-top:15px;">
+                    <button class="enter-btn" style="padding:8px 20px;" onclick="saveDrawing()">ارسال اللوحة ❤️</button>
+                    <button class="enter-btn" style="padding:8px 20px; background:#888;" onclick="clearCanvas()">مسح</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="music" class="section">
+            <div class="box"><span class="title-text">Our Music</span><div id="songsList"></div><div class="input-group"><input type="text" id="sName" placeholder="Song Name"><input type="text" id="sUrl" placeholder="YouTube Link"><button class="enter-btn" style="padding: 8px;" onclick="addData('songs')">Add Song ❤️</button></div></div>
+        </div>
+
+        <div id="notes" class="section">
+            <div class="box"><span class="title-text">Our Story</span><div id="notesList"></div><div class="input-group"><textarea id="noteText" placeholder="Write a memory here.."></textarea><button class="enter-btn" style="padding: 8px;" onclick="addData('notes')">Save Memory ✨</button></div></div>
+        </div>
+
+        <div id="gallery" class="section">
+            <div class="box"><span class="title-text">Gallery</span><div style="text-align: center;"><label for="imgInp" class="enter-btn" style="padding: 10px 20px; cursor:pointer;">Upload Photos</label><input type="file" id="imgInp" multiple style="display:none" onchange="uploadImages(event)"></div><div class="gallery-grid" id="galleryGrid" style="margin-top:20px;"></div></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8gmiGlE-ALQyf_Urbhzfjl2g1-BQrCBM",
+            authDomain: "our-special-world-d1905.firebaseapp.com",
+            projectId: "our-special-world-d1905",
+            storageBucket: "our-special-world-d1905.firebasestorage.app",
+            messagingSenderId: "638515017777",
+            appId: "1:638515017777:web:b25873ee282b0c19987d10"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- نظام تساقط القلوب ---
+        let heartInterval;
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart-fall';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            const duration = Math.random() * 3 + 2;
+            heart.style.animationDuration = duration + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), duration * 1000);
+        }
+
+        function startHearts() { if (!heartInterval) heartInterval = setInterval(createHeart, 300); }
+        function stopHearts() { clearInterval(heartInterval); heartInterval = null; }
+
+        // --- نظام النجوم لليل (بعد الساعة 12) ---
+        function initNightSky() {
+            const hour = new Date().getHours();
+            if (hour >= 0 && hour < 5) {
+                document.body.classList.add('night-mode');
+                for (let i = 0; i < 50; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.width = star.style.height = Math.random() * 3 + 'px';
+                    star.style.left = Math.random() * 100 + 'vw';
+                    star.style.top = Math.random() * 100 + 'vh';
+                    star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+                    document.body.appendChild(star);
+                }
+            }
+        }
+
+        window.toggleDark = () => {
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('dark-toggle').innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        };
+
+        window.checkPass = function() {
+            if(document.getElementById('passCode').value === "28/6/2009") {
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                document.getElementById('dark-toggle').style.display = 'block';
+                initNightSky(); 
+                if(document.getElementById('letter').classList.contains('active')) startHearts();
+            } else { alert("Correct the date!"); }
+        };
+
+        const canvas = document.getElementById('paintCanvas');
+        const ctx = canvas.getContext('2d');
+        let painting = false; canvas.width = 300; canvas.height = 300;
+        ctx.strokeStyle = '#d81b60'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+
+        const getPos = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: cx - rect.left, y: cy - rect.top };
+        };
+        canvas.onmousedown = (e) => { painting = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); };
+        canvas.onmousemove = (e) => { if(!painting) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
+        canvas.onmouseup = () => painting = false;
+        canvas.ontouchstart = (e) => { e.preventDefault(); painting = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); };
+        canvas.ontouchmove = (e) => { e.preventDefault(); if(!painting) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
+
+        window.clearCanvas = () => ctx.clearRect(0, 0, 300, 300);
+
+        window.saveDrawing = async () => {
+            const dataUrl = canvas.toDataURL();
+            await addDoc(collection(db, "drawings"), { img: dataUrl, createdAt: serverTimestamp() });
+            alert("تم تعليق اللوحة! ❤️");
+            window.clearCanvas();
+        };
+
+        window.removeItem = async (col, id) => { if(confirm("حذف؟")) await deleteDoc(doc(db, col, id)); };
+
+        onSnapshot(query(collection(db, "drawings"), orderBy("createdAt", "desc")), (snap) => {
+            const gallery = document.getElementById('paintingsGalleryList');
+            gallery.innerHTML = snap.docs.map(doc => `
+                <div class="hanging-frame">
+                    <div class="del-art" onclick="removeItem('drawings', '${doc.id}')">×</div>
+                    <img src="${doc.data().img}">
+                </div>
+            `).join('');
+        });
+
+        window.addData = async function(type) {
+            if(type === 'songs') {
+                const n = document.getElementById('sName').value, u = document.getElementById('sUrl').value;
+                if(n && u) await addDoc(collection(db, "songs"), { n, u, createdAt: serverTimestamp() });
+                document.getElementById('sName').value = ''; document.getElementById('sUrl').value = '';
+            } else if(type === 'notes') {
+                const t = document.getElementById('noteText').value;
+                if(t) await addDoc(collection(db, "notes"), { text: t, createdAt: serverTimestamp() });
+                document.getElementById('noteText').value = '';
+            }
+        };
+
+        window.uploadImages = (e) => {
+            for(let f of e.target.files) {
+                const r = new FileReader();
+                r.onload = async (ev) => { await addDoc(collection(db, "imgs"), { src: ev.target.result, createdAt: serverTimestamp() }); };
+                r.readAsDataURL(f);
+            }
+        };
+
+        const listen = (col, elId, temp) => {
+            onSnapshot(query(collection(db, col), orderBy("createdAt", "desc")), (snap) => {
+                document.getElementById(elId).innerHTML = snap.docs.map(doc => temp(doc.id, doc.data())).join('');
+            });
+        };
+
+        listen('songs', 'songsList', (id, d) => `<div class="list-item"><a href="${d.u}" target="_blank" style="text-decoration:none; color:var(--main-pink)">🎵 ${d.n}</a><span class="del-btn" onclick="removeItem('songs', '${id}')">×</span></div>`);
+        listen('notes', 'notesList', (id, d) => `<div class="list-item"><span>${d.text}</span><span class="del-btn" onclick="removeItem('notes', '${id}')">×</span></div>`);
+        listen('imgs', 'galleryGrid', (id, d) => `<div class="img-container"><img src="${d.src}"><div class="img-del" onclick="removeItem('imgs', '${id}')">×</div></div>`);
+
+        window.showTab = (id) => {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            // التحكم في القلوب حسب التبويب
+            if (id === 'letter') startHearts(); else stopHearts();
+        };
+
+        window.onload = () => {
+            setTimeout(() => { document.getElementById('intro-screen').style.display = 'none'; document.getElementById('login').style.display = 'flex'; }, 2500);
+        };
+    </script>
+</body>
+</html>
+
+        canvas { border: 2px dashed var(--main-pink); border-radius: 15px; background: white; width: 100%; max-width: 300px; height: 300px; touch-action: none; display: block; margin: 0 auto; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; background: var(--soft-pink); padding: 12px; border-radius: 15px; margin-bottom: 10px; border-left: 4px solid var(--main-pink); }
+        .del-btn { color: #ff4d4d; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-left: 10px; }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .img-container { position: relative; height: 110px; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 15px; }
+        .img-del { position: absolute; top: -5px; right: -5px; background: var(--main-pink); color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; border: 2px solid white; }
+
+        .input-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee; }
+        .input-group input, .input-group textarea { padding: 10px; border-radius: 10px; border: 1px solid #f0f0f0; outline: none; background: var(--pink-bg); color: var(--text-color); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
