@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Our Private World ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Cairo:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
@@ -11,87 +11,94 @@
             --main-pink: #d81b60; 
             --soft-pink: #fce4ec; 
             --text-color: #444; 
-            --box-bg: rgba(255, 255, 255, 0.6); /* زجاجي فاتح */
+            --ios-blur: saturate(180%) blur(20px);
+            --box-bg: rgba(255, 255, 255, 0.7);
         }
         body.dark-mode { 
-            --pink-bg: #1a1a1a; 
+            --pink-bg: #000000; 
             --main-pink: #ff4081; 
-            --soft-pink: #2d2d2d; 
-            --text-color: #eee; 
-            --box-bg: rgba(45, 45, 45, 0.7); /* زجاجي غامق */
+            --text-color: #ffffff; 
+            --box-bg: rgba(28, 28, 30, 0.8);
         }
         
-        body { background-color: var(--pink-bg); margin: 0; padding: 0; font-family: 'Cairo', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; transition: 0.3s; color: var(--text-color); overflow-x: hidden; }
+        body { background-color: var(--pink-bg); margin: 0; padding: 0; font-family: 'Cairo', -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; transition: 0.3s; color: var(--text-color); overflow-x: hidden; }
         
-        /* تأثير الزجاج البلوري */
-        .glass-effect {
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
+        /* شاشة الترحيب */
         #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--pink-bg); display: flex; justify-content: center; align-items: center; z-index: 2000; transition: 0.8s; }
-        #intro-screen.fade-out { opacity: 0; visibility: hidden; }
 
-        #dark-toggle { position: fixed; top: 15px; right: 15px; background: var(--main-pink); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; z-index: 1100; font-size: 1.2rem; display: none; }
+        #dark-toggle { position: fixed; top: 15px; right: 15px; background: var(--main-pink); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; z-index: 1100; font-size: 1.2rem; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-        #login { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; width: 100%; }
-        .password-content { background: var(--box-bg); padding: 35px; border-radius: 25px; text-align: center; max-width: 400px; width: 85%; }
-        input[type="password"] { width: 80%; padding: 12px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; text-align: center; outline: none; font-size: 1.2rem; color: var(--main-pink); background: rgba(255,255,255,0.5); }
-        .enter-btn { background-color: var(--main-pink); color: white; border: none; padding: 12px 45px; border-radius: 12px; cursor: pointer; font-weight: bold; display: inline-block; text-decoration: none; transition: 0.3s; }
-        .enter-btn:active { transform: scale(0.95); }
+        /* تسجيل الدخول بنمط قفل الآيفون */
+        #login { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; width: 100%; background: linear-gradient(to bottom, #ff9a9e 0%, #fecfef 100%); }
+        .password-content { 
+            background: rgba(255, 255, 255, 0.25); 
+            backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur);
+            padding: 40px 20px; border-radius: 40px; text-align: center; max-width: 350px; width: 85%; 
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        input[type="password"] { 
+            width: 80%; padding: 14px; margin-bottom: 20px; border: none; border-radius: 15px; 
+            text-align: center; outline: none; font-size: 1.2rem; color: #000; background: rgba(255,255,255,0.5); 
+        }
 
-        #main-content { display: none; width: 100%; max-width: 500px; padding: 20px; animation: fadeIn 1s; z-index: 10; }
-        .nav-tabs { display: flex; justify-content: space-around; background: var(--box-bg); padding: 10px; border-radius: 20px; margin-bottom: 20px; overflow-x: auto; }
-        .tab-btn { cursor: pointer; padding: 8px 12px; border-radius: 15px; font-size: 0.75rem; font-weight: bold; color: #888; white-space: nowrap; }
-        .tab-btn.active { background: var(--main-pink); color: white; }
+        .enter-btn { background-color: var(--main-pink); color: white; border: none; padding: 12px 45px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; }
 
-        .section { display: none; }
-        .section.active { display: block; animation: fadeIn 0.5s; }
-        .box { background: var(--box-bg); border-radius: 25px; padding: 25px; margin-bottom: 20px; }
+        /* شريط التبويبات بنمط iOS */
+        #main-content { display: none; width: 100%; max-width: 500px; padding: 15px; animation: fadeIn 1s; z-index: 10; }
+        
+        .nav-tabs { 
+            display: flex; background: var(--box-bg); 
+            backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur);
+            padding: 4px; border-radius: 15px; margin-bottom: 25px; 
+            position: sticky; top: 15px; z-index: 1000; border: 1px solid rgba(255,255,255,0.2);
+        }
+        .tab-btn { 
+            flex: 1; cursor: pointer; padding: 10px; border-radius: 12px; font-size: 0.85rem; 
+            font-weight: bold; color: #888; text-align: center; transition: 0.2s;
+        }
+        .tab-btn.active { background: #fff; color: #000; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+        body.dark-mode .tab-btn.active { background: #636366; color: #fff; }
+
+        /* الصناديق */
+        .box { 
+            background: var(--box-bg); 
+            backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur);
+            border-radius: 30px; padding: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.2);
+        }
+        
         .title-text { font-family: 'Great Vibes', cursive; color: var(--main-pink); font-size: 2.2rem; margin-bottom: 15px; display: block; text-align: center; }
         .message-text { font-family: 'Dancing Script', cursive; font-size: 1.35rem; line-height: 1.8; text-align: center; color: var(--text-color); }
 
-        /* تعديل إطارات الرسم المعلقة */
-        .hanging-frame { position: relative; margin: 30px auto; width: 220px; height: 220px; background: #fff; border: 8px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: rotate(-2deg); transition: 0.5s; }
-        .hanging-frame img { width: 100%; height: 100%; object-fit: contain; }
-        .del-art { position: absolute; top: -10px; right: -10px; background: #ff4d4d; color: white; border: 2px solid white; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 10; }
-
-        canvas { border: 2px dashed var(--main-pink); border-radius: 15px; background: white; width: 100%; max-width: 300px; height: 300px; touch-action: none; display: block; margin: 0 auto; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; background: rgba(216, 27, 96, 0.1); padding: 12px; border-radius: 15px; margin-bottom: 10px; border-left: 4px solid var(--main-pink); }
-        .del-btn { color: #ff4d4d; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-left: 10px; }
-
-        /* تصميم صور البولاريد في الجاليري */
-        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 10px; }
-        .img-container { 
-            position: relative; 
-            background: white; 
-            padding: 10px 10px 35px 10px; 
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1); 
-            transition: 0.4s;
-            border-radius: 2px;
+        /* إطارات الرسم والبولاريد */
+        .hanging-frame, .img-container { 
+            background: #fff; padding: 10px 10px 35px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+            border-radius: 4px; position: relative; transition: 0.3s;
         }
+        .hanging-frame { width: 200px; margin: 20px auto; transform: rotate(-2deg); }
+        .hanging-frame img { width: 100%; height: 100%; object-fit: contain; }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .img-container:nth-child(odd) { transform: rotate(-3deg); }
         .img-container:nth-child(even) { transform: rotate(3deg); }
-        .img-container:hover { transform: rotate(0deg) scale(1.05); z-index: 5; }
-        .img-container img { width: 100%; height: 150px; object-fit: cover; border: 1px solid #f0f0f0; }
-        .img-del { position: absolute; top: 5px; right: 5px; background: var(--main-pink); color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; border: 2px solid white; }
+        .img-container img { width: 100%; height: 150px; object-fit: cover; }
 
-        .input-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(0,0,0,0.1); }
-        .input-group input, .input-group textarea { padding: 10px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); outline: none; background: rgba(255,255,255,0.4); color: var(--text-color); }
+        canvas { border: 1px solid #ddd; border-radius: 20px; background: white; width: 100%; max-width: 300px; height: 300px; display: block; margin: 0 auto; }
+        
+        .list-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(255,255,255,0.4); padding: 15px; border-radius: 18px; margin-bottom: 10px; 
+        }
 
-        /* إضافات الأنيميشن */
+        .input-group input, .input-group textarea { 
+            padding: 12px; border-radius: 12px; border: none; outline: none; 
+            background: rgba(255,255,255,0.5); color: var(--text-color); font-family: 'Cairo';
+        }
+
+        /* أنيميشن */
         .heart-fall { position: fixed; top: -20px; user-select: none; pointer-events: none; z-index: 9999; animation: fall linear forwards; }
-        @keyframes fall { to { transform: translateY(100vh); } }
-        body.night-mode { background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%) !important; }
-        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle var(--duration) infinite; z-index: 0; }
-        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* شريط التمرير */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: var(--main-pink); border-radius: 10px; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -101,53 +108,52 @@
     <div id="intro-screen"><h1 class="title-text" style="font-size: 2.5rem;">Welcome my love..</h1></div>
 
     <div id="login">
-        <div class="password-content glass-effect">
-            <h3 style="font-family: 'Great Vibes', cursive; color: var(--main-pink);">Enter our special date</h3>
+        <div class="password-content">
+            <h3 style="font-family: 'Great Vibes', cursive; color: #fff; font-size: 2rem;">Our special date</h3>
             <input type="password" id="passCode" placeholder="••••••••">
             <br>
-            <button class="enter-btn" onclick="checkPass()">Enter</button>
+            <button class="enter-btn" onclick="checkPass()">Unlock</button>
         </div>
     </div>
 
     <div id="main-content">
-        <div class="nav-tabs glass-effect">
+        <div class="nav-tabs">
             <div class="tab-btn active" onclick="showTab('letter')">Letter</div>
-            <div class="tab-btn" onclick="showTab('draw')">Paintings</div>
+            <div class="tab-btn" onclick="showTab('draw')">Draw</div>
             <div class="tab-btn" onclick="showTab('music')">Music</div>
-            <div class="tab-btn" onclick="showTab('notes')">Memories</div>
+            <div class="tab-btn" onclick="showTab('notes')">Story</div>
             <div class="tab-btn" onclick="showTab('gallery')">Gallery</div>
         </div>
 
         <div id="letter" class="section active">
-            <div class="box glass-effect">
+            <div class="box">
                 <span class="title-text">My Dearest Naboushti..</span>
-                <p class="message-text">This website was created just for you, to hold our stations and our memories together. Everything here has a special story and a memory etched in our hearts.</p>
+                <p class="message-text">This website was created just for you, to hold our stations and our memories together.</p>
             </div>
         </div>
 
         <div id="draw" class="section">
-            <div class="box glass-effect">
-                <span class="title-text">The paintings of my beauty</span>
-                <div id="paintingsGalleryList"></div>
-                
+            <div class="box">
+                <span class="title-text">Paintings</span>
+                <div id="paintingsGalleryList" style="display: flex; overflow-x: auto; gap: 15px; padding-bottom: 15px;"></div>
                 <canvas id="paintCanvas"></canvas>
-                <div style="text-align:center; margin-top:15px;">
-                    <button class="enter-btn" style="padding:8px 20px;" onclick="saveDrawing()">ارسال اللوحة ❤️</button>
-                    <button class="enter-btn" style="padding:8px 20px; background:#888;" onclick="clearCanvas()">مسح</button>
+                <div style="text-align:center; margin-top:20px;">
+                    <button class="enter-btn" style="padding:10px 25px;" onclick="saveDrawing()">Send Art ❤️</button>
+                    <button class="enter-btn" style="padding:10px 25px; background:#8e8e93; margin-left:10px;" onclick="clearCanvas()">Clear</button>
                 </div>
             </div>
         </div>
 
         <div id="music" class="section">
-            <div class="box glass-effect"><span class="title-text">Our Music</span><div id="songsList"></div><div class="input-group"><input type="text" id="sName" placeholder="Song Name"><input type="text" id="sUrl" placeholder="YouTube Link"><button class="enter-btn" style="padding: 8px;" onclick="addData('songs')">Add Song ❤️</button></div></div>
+            <div class="box"><span class="title-text">Our Music</span><div id="songsList"></div><div class="input-group"><input type="text" id="sName" placeholder="Song Name"><input type="text" id="sUrl" placeholder="YouTube Link"><button class="enter-btn" style="padding: 10px;" onclick="addData('songs')">Add Song ❤️</button></div></div>
         </div>
 
         <div id="notes" class="section">
-            <div class="box glass-effect"><span class="title-text">Our Story</span><div id="notesList"></div><div class="input-group"><textarea id="noteText" placeholder="Write a memory here.."></textarea><button class="enter-btn" style="padding: 8px;" onclick="addData('notes')">Save Memory ✨</button></div></div>
+            <div class="box"><span class="title-text">Our Story</span><div id="notesList"></div><div class="input-group"><textarea id="noteText" placeholder="Write a memory.."></textarea><button class="enter-btn" style="padding: 10px;" onclick="addData('notes')">Save ✨</button></div></div>
         </div>
 
         <div id="gallery" class="section">
-            <div class="box glass-effect"><span class="title-text">Gallery</span><div style="text-align: center;"><label for="imgInp" class="enter-btn" style="padding: 10px 20px; cursor:pointer;">Upload Photos</label><input type="file" id="imgInp" multiple style="display:none" onchange="uploadImages(event)"></div><div class="gallery-grid" id="galleryGrid" style="margin-top:20px;"></div></div>
+            <div class="box"><span class="title-text">Gallery</span><div style="text-align: center; margin-bottom: 20px;"><label for="imgInp" class="enter-btn" style="padding: 10px 25px; cursor:pointer;">Upload Photo</label><input type="file" id="imgInp" multiple style="display:none" onchange="uploadImages(event)"></div><div class="gallery-grid" id="galleryGrid"></div></div>
         </div>
     </div>
 
@@ -167,7 +173,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- نظام تساقط القلوب ---
         let heartInterval;
         function createHeart() {
             const heart = document.createElement('div');
@@ -183,23 +188,6 @@
         function startHearts() { if (!heartInterval) heartInterval = setInterval(createHeart, 400); }
         function stopHearts() { clearInterval(heartInterval); heartInterval = null; }
 
-        // --- نظام النجوم لليل ---
-        function initNightSky() {
-            const hour = new Date().getHours();
-            if (hour >= 0 && hour < 5) {
-                document.body.classList.add('night-mode');
-                for (let i = 0; i < 40; i++) {
-                    const star = document.createElement('div');
-                    star.className = 'star';
-                    star.style.width = star.style.height = Math.random() * 3 + 'px';
-                    star.style.left = Math.random() * 100 + 'vw';
-                    star.style.top = Math.random() * 100 + 'vh';
-                    star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
-                    document.body.appendChild(star);
-                }
-            }
-        }
-
         window.toggleDark = () => {
             document.body.classList.toggle('dark-mode');
             document.getElementById('dark-toggle').innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
@@ -210,7 +198,6 @@
                 document.getElementById('login').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';
                 document.getElementById('dark-toggle').style.display = 'block';
-                initNightSky();
                 if(document.getElementById('letter').classList.contains('active')) startHearts();
             } else { alert("Correct the date!"); }
         };
@@ -234,19 +221,17 @@
 
         window.clearCanvas = () => ctx.clearRect(0, 0, 300, 300);
         window.saveDrawing = async () => {
-            const dataUrl = canvas.toDataURL();
-            await addDoc(collection(db, "drawings"), { img: dataUrl, createdAt: serverTimestamp() });
-            alert("تم تعليق اللوحة! ❤️");
+            await addDoc(collection(db, "drawings"), { img: canvas.toDataURL(), createdAt: serverTimestamp() });
+            alert("Saved! ❤️");
             window.clearCanvas();
         };
 
         window.removeItem = async (col, id) => { if(confirm("حذف؟")) await deleteDoc(doc(db, col, id)); };
 
         onSnapshot(query(collection(db, "drawings"), orderBy("createdAt", "desc")), (snap) => {
-            const gallery = document.getElementById('paintingsGalleryList');
-            gallery.innerHTML = snap.docs.map(doc => `
-                <div class="hanging-frame">
-                    <div class="del-art" onclick="removeItem('drawings', '${doc.id}')">×</div>
+            document.getElementById('paintingsGalleryList').innerHTML = snap.docs.map(doc => `
+                <div class="hanging-frame" style="min-width:180px;">
+                    <div style="position:absolute; top:0; right:0; cursor:pointer;" onclick="removeItem('drawings', '${doc.id}')">×</div>
                     <img src="${doc.data().img}">
                 </div>`).join('');
         });
@@ -256,7 +241,7 @@
                 const n = document.getElementById('sName').value, u = document.getElementById('sUrl').value;
                 if(n && u) await addDoc(collection(db, "songs"), { n, u, createdAt: serverTimestamp() });
                 document.getElementById('sName').value = ''; document.getElementById('sUrl').value = '';
-            } else if(type === 'notes') {
+            } else {
                 const t = document.getElementById('noteText').value;
                 if(t) await addDoc(collection(db, "notes"), { text: t, createdAt: serverTimestamp() });
                 document.getElementById('noteText').value = '';
@@ -277,9 +262,9 @@
             });
         };
 
-        listen('songs', 'songsList', (id, d) => `<div class="list-item"><a href="${d.u}" target="_blank" style="text-decoration:none; color:var(--main-pink)">🎵 ${d.n}</a><span class="del-btn" onclick="removeItem('songs', '${id}')">×</span></div>`);
-        listen('notes', 'notesList', (id, d) => `<div class="list-item"><span>${d.text}</span><span class="del-btn" onclick="removeItem('notes', '${id}')">×</span></div>`);
-        listen('imgs', 'galleryGrid', (id, d) => `<div class="img-container"><img src="${d.src}"><div class="img-del" onclick="removeItem('imgs', '${id}')">×</div></div>`);
+        listen('songs', 'songsList', (id, d) => `<div class="list-item"><a href="${d.u}" target="_blank" style="text-decoration:none; color:#007aff; font-weight:bold;">🎵 ${d.n}</a><span onclick="removeItem('songs', '${id}')">🗑️</span></div>`);
+        listen('notes', 'notesList', (id, d) => `<div class="list-item"><span>${d.text}</span><span onclick="removeItem('notes', '${id}')">🗑️</span></div>`);
+        listen('imgs', 'galleryGrid', (id, d) => `<div class="img-container"><img src="${d.src}"><div style="position:absolute; top:5px; right:5px; cursor:pointer;" onclick="removeItem('imgs', '${id}')">×</div></div>`);
 
         window.showTab = (id) => {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
