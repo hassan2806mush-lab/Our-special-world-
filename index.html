@@ -23,79 +23,47 @@
         
         body { background-color: var(--pink-bg); margin: 0; padding: 0; font-family: 'Cairo', -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; transition: 0.3s; color: var(--text-color); overflow-x: hidden; }
         
-        /* شاشة الترحيب */
         #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--pink-bg); display: flex; justify-content: center; align-items: center; z-index: 2000; transition: 0.8s; }
-
         #dark-toggle { position: fixed; top: 15px; right: 15px; background: var(--main-pink); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; z-index: 1100; font-size: 1.2rem; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-        /* تسجيل الدخول بنمط قفل الآيفون */
         #login { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; width: 100%; background: linear-gradient(to bottom, #ff9a9e 0%, #fecfef 100%); }
-        .password-content { 
-            background: rgba(255, 255, 255, 0.25); 
-            backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur);
-            padding: 40px 20px; border-radius: 40px; text-align: center; max-width: 350px; width: 85%; 
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        
-        input[type="password"] { 
-            width: 80%; padding: 14px; margin-bottom: 20px; border: none; border-radius: 15px; 
-            text-align: center; outline: none; font-size: 1.2rem; color: #000; background: rgba(255,255,255,0.5); 
-        }
-
+        .password-content { background: rgba(255, 255, 255, 0.25); backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur); padding: 40px 20px; border-radius: 40px; text-align: center; max-width: 350px; width: 85%; border: 1px solid rgba(255,255,255,0.3); }
+        input[type="password"] { width: 80%; padding: 14px; margin-bottom: 20px; border: none; border-radius: 15px; text-align: center; outline: none; font-size: 1.2rem; color: #000; background: rgba(255,255,255,0.5); }
         .enter-btn { background-color: var(--main-pink); color: white; border: none; padding: 12px 45px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; }
 
-        /* شريط التبويبات بنمط iOS */
-        #main-content { display: none; width: 100%; max-width: 500px; padding: 15px; animation: fadeIn 1s; z-index: 10; }
+        #main-content { display: none; width: 100%; max-width: 500px; padding: 15px; animation: fadeIn 1s; z-index: 10; padding-bottom: 100px; }
         
-        .nav-tabs { 
-            display: flex; background: var(--box-bg); 
-            backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur);
-            padding: 4px; border-radius: 15px; margin-bottom: 25px; 
-            position: sticky; top: 15px; z-index: 1000; border: 1px solid rgba(255,255,255,0.2);
-        }
-        .tab-btn { 
-            flex: 1; cursor: pointer; padding: 10px; border-radius: 12px; font-size: 0.85rem; 
-            font-weight: bold; color: #888; text-align: center; transition: 0.2s;
-        }
+        .nav-tabs { display: flex; background: var(--box-bg); backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur); padding: 4px; border-radius: 15px; margin-bottom: 25px; position: sticky; top: 15px; z-index: 1000; border: 1px solid rgba(255,255,255,0.2); overflow-x: auto; }
+        .tab-btn { flex: 0 0 auto; min-width: 80px; cursor: pointer; padding: 10px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; color: #888; text-align: center; transition: 0.2s; }
         .tab-btn.active { background: #fff; color: #000; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
         body.dark-mode .tab-btn.active { background: #636366; color: #fff; }
 
-        /* الصناديق */
-        .box { 
-            background: var(--box-bg); 
-            backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur);
-            border-radius: 30px; padding: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.2);
-        }
-        
+        .box { background: var(--box-bg); backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur); border-radius: 30px; padding: 25px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.2); }
         .title-text { font-family: 'Great Vibes', cursive; color: var(--main-pink); font-size: 2.2rem; margin-bottom: 15px; display: block; text-align: center; }
         .message-text { font-family: 'Dancing Script', cursive; font-size: 1.35rem; line-height: 1.8; text-align: center; color: var(--text-color); }
 
-        /* إطارات الرسم والبولاريد */
-        .hanging-frame, .img-container { 
-            background: #fff; padding: 10px 10px 35px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
-            border-radius: 4px; position: relative; transition: 0.3s;
-        }
-        .hanging-frame { width: 200px; margin: 20px auto; transform: rotate(-2deg); }
-        .hanging-frame img { width: 100%; height: 100%; object-fit: contain; }
+        /* Reels Styling */
+        #reelsContainer { height: 75vh; overflow-y: scroll; snap-type: y mandatory; scrollbar-width: none; border-radius: 25px; }
+        #reelsContainer::-webkit-scrollbar { display: none; }
+        .reel-video-wrapper { width: 100%; height: 100%; snap-align: start; position: relative; background: #000; border-radius: 25px; margin-bottom: 10px; }
+        .reel-video-wrapper video { width: 100%; height: 100%; object-fit: cover; border-radius: 25px; }
+
+        /* Stories Styling */
+        .stories-bar { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; margin-bottom: 15px; scrollbar-width: none; }
+        .stories-bar::-webkit-scrollbar { display: none; }
+        .story-circle { min-width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--main-pink); padding: 3px; position: relative; }
+        .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .add-story-btn { min-width: 70px; height: 70px; border-radius: 50%; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #ccc; cursor: pointer; }
 
         .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .img-container:nth-child(odd) { transform: rotate(-3deg); }
-        .img-container:nth-child(even) { transform: rotate(3deg); }
+        .img-container { background: #fff; padding: 10px 10px 35px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-radius: 4px; position: relative; }
         .img-container img { width: 100%; height: 150px; object-fit: cover; }
-
         canvas { border: 1px solid #ddd; border-radius: 20px; background: white; width: 100%; max-width: 300px; height: 300px; display: block; margin: 0 auto; }
-        
-        .list-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: rgba(255,255,255,0.4); padding: 15px; border-radius: 18px; margin-bottom: 10px; 
-        }
+        .list-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.4); padding: 15px; border-radius: 18px; margin-bottom: 10px; }
+        .input-group input, .input-group textarea { width: 100%; padding: 12px; border-radius: 12px; border: none; outline: none; background: rgba(255,255,255,0.5); color: var(--text-color); font-family: 'Cairo'; margin-bottom: 10px; }
 
-        .input-group input, .input-group textarea { 
-            padding: 12px; border-radius: 12px; border: none; outline: none; 
-            background: rgba(255,255,255,0.5); color: var(--text-color); font-family: 'Cairo';
-        }
-
-        /* أنيميشن */
+        .section { display: none; }
+        .section.active { display: block; }
         .heart-fall { position: fixed; top: -20px; user-select: none; pointer-events: none; z-index: 9999; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -119,6 +87,8 @@
     <div id="main-content">
         <div class="nav-tabs">
             <div class="tab-btn active" onclick="showTab('letter')">Letter</div>
+            <div class="tab-btn" onclick="showTab('reels')">Reels 🎥</div>
+            <div class="tab-btn" onclick="showTab('stories-page')">Stories ✨</div>
             <div class="tab-btn" onclick="showTab('draw')">Draw</div>
             <div class="tab-btn" onclick="showTab('music')">Music</div>
             <div class="tab-btn" onclick="showTab('notes')">Story</div>
@@ -129,6 +99,29 @@
             <div class="box">
                 <span class="title-text">My Dearest Naboushti..</span>
                 <p class="message-text">This website was created just for you, to hold our stations and our memories together.</p>
+            </div>
+        </div>
+
+        <div id="reels" class="section">
+            <div class="box" style="padding: 10px; background: transparent; border: none;">
+                <div id="reelsContainer"></div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <label class="enter-btn" style="padding: 10px 25px; cursor: pointer;">
+                        Upload Reel 🎥 <input type="file" hidden accept="video/*" onchange="handleUpload(event, 'reels')">
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div id="stories-page" class="section">
+            <div class="box">
+                <span class="title-text">Our Stories</span>
+                <div class="stories-bar" id="storiesList">
+                    <label class="add-story-btn">
+                        + <input type="file" hidden accept="image/*" onchange="handleUpload(event, 'stories')">
+                    </label>
+                </div>
+                <p style="text-align: center; font-size: 0.9rem; opacity: 0.7;">اضغط على الصور لمشاهدة الستوري</p>
             </div>
         </div>
 
@@ -145,13 +138,11 @@
         </div>
 
         <div id="music" class="section">
-            <div class="box"><span class="title-text">Our Music</span><div id="songsList"></div><div class="input-group"><input type="text" id="sName" placeholder="Song Name"><input type="text" id="sUrl" placeholder="YouTube Link"><button class="enter-btn" style="padding: 10px;" onclick="addData('songs')">Add Song ❤️</button></div></div>
+            <div class="box"><span class="title-text">Our Music</span><div id="songsList"></div><div class="input-group"><input type="text" id="sName" placeholder="Song Name"><input type="text" id="sUrl" placeholder="YouTube Link"><button class="enter-btn" style="padding: 10px; width:100%" onclick="addData('songs')">Add Song ❤️</button></div></div>
         </div>
-
         <div id="notes" class="section">
-            <div class="box"><span class="title-text">Our Story</span><div id="notesList"></div><div class="input-group"><textarea id="noteText" placeholder="Write a memory.."></textarea><button class="enter-btn" style="padding: 10px;" onclick="addData('notes')">Save ✨</button></div></div>
+            <div class="box"><span class="title-text">Our Story</span><div id="notesList"></div><div class="input-group"><textarea id="noteText" placeholder="Write a memory.."></textarea><button class="enter-btn" style="padding: 10px; width:100%" onclick="addData('notes')">Save ✨</button></div></div>
         </div>
-
         <div id="gallery" class="section">
             <div class="box"><span class="title-text">Gallery</span><div style="text-align: center; margin-bottom: 20px;"><label for="imgInp" class="enter-btn" style="padding: 10px 25px; cursor:pointer;">Upload Photo</label><input type="file" id="imgInp" multiple style="display:none" onchange="uploadImages(event)"></div><div class="gallery-grid" id="galleryGrid"></div></div>
         </div>
@@ -173,6 +164,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Core Functions
         let heartInterval;
         function createHeart() {
             const heart = document.createElement('div');
@@ -202,11 +194,51 @@
             } else { alert("Correct the date!"); }
         };
 
+        // Handling Uploads (Reels & Stories)
+        window.handleUpload = (e, type) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = async (ev) => {
+                await addDoc(collection(db, type), { src: ev.target.result, createdAt: serverTimestamp() });
+                alert("Posted successfully! ❤️");
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // Snapshot Listeners for Reels & Stories
+        onSnapshot(query(collection(db, "reels"), orderBy("createdAt", "desc")), (snap) => {
+            document.getElementById('reelsContainer').innerHTML = snap.docs.map(doc => `
+                <div class="reel-video-wrapper">
+                    <video loop onclick="this.paused ? this.play() : this.pause()">
+                        <source src="${doc.data().src}" type="video/mp4">
+                    </video>
+                    <div style="position:absolute; top:10px; right:10px; color:white; cursor:pointer;" onclick="removeItem('reels', '${doc.id}')">×</div>
+                </div>`).join('');
+        });
+
+        onSnapshot(query(collection(db, "stories"), orderBy("createdAt", "desc")), (snap) => {
+            const list = document.getElementById('storiesList');
+            const addBtn = list.querySelector('.add-story-btn').outerHTML;
+            list.innerHTML = addBtn + snap.docs.map(doc => `
+                <div class="story-circle" onclick="viewStory('${doc.data().src}')">
+                    <img src="${doc.data().src}">
+                    <div style="position:absolute; top:-5px; right:-5px; background:var(--main-pink); color:white; border-radius:50%; width:20px; height:20px; text-align:center; font-size:12px; cursor:pointer;" onclick="event.stopPropagation(); removeItem('stories', '${doc.id}')">×</div>
+                </div>`).join('');
+        });
+
+        window.viewStory = (src) => {
+            const viewer = document.createElement('div');
+            viewer.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:5000; display:flex; align-items:center; justify-content:center;";
+            viewer.innerHTML = `<img src="${src}" style="max-width:100%; max-height:100%;"><span style="position:fixed; top:20px; right:20px; color:white; font-size:30px; cursor:pointer;">×</span>`;
+            viewer.onclick = () => viewer.remove();
+            document.body.appendChild(viewer);
+        };
+
+        // Original Drawing Logic
         const canvas = document.getElementById('paintCanvas');
         const ctx = canvas.getContext('2d');
         let painting = false; canvas.width = 300; canvas.height = 300;
         ctx.strokeStyle = '#d81b60'; ctx.lineWidth = 4; ctx.lineCap = 'round';
-
         const getPos = (e) => {
             const rect = canvas.getBoundingClientRect();
             const cx = e.touches ? e.touches[0].clientX : e.clientX;
@@ -228,6 +260,7 @@
 
         window.removeItem = async (col, id) => { if(confirm("حذف؟")) await deleteDoc(doc(db, col, id)); };
 
+        // Realtime Listeners for original sections
         onSnapshot(query(collection(db, "drawings"), orderBy("createdAt", "desc")), (snap) => {
             document.getElementById('paintingsGalleryList').innerHTML = snap.docs.map(doc => `
                 <div class="hanging-frame" style="min-width:180px;">
